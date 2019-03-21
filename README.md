@@ -1,4 +1,12 @@
-# Eternal Twitch Monitor Tool
+# Eternal Twitch Monitor Tool :gem:
+This is a simple tool that periodically queries Twitch for a list of live streams
+of the Eternal Card Game, prints the data to the screen, and notifies the user
+when a new stream starts that matches configurable key words. It's handy for
+alerting you when a new drop campaign starts so you don't miss out on those
+tasty diamond drops. :gem:
+
+![](monitor.png)
+![](notification.png)
 
 ## Getting Started
 You'll need a Twitch client ID and a Pushbullet API access token.
