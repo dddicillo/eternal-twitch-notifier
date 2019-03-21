@@ -1,0 +1,5 @@
+__title__ = 'eternal_twitch'
+__author__ = 'dddicillo'
+__license__ = 'MIT'
+__copyright__ = 'Copyright 2019 dddicillo'
+__version__ = '0.1.0'
