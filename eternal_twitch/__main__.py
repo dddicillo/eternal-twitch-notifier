@@ -3,6 +3,7 @@ from .store import Store
 from .twitch_poller import TwitchPoller
 from .stream_printer import StreamPrinter
 from .stream_notifier import StreamNotifier
+from time import sleep
 import logging
 
 
@@ -21,10 +22,9 @@ def main():
     # Initialize Store
     store = Store(config)
 
-    # Start Twitch Poller
+    # Configure Twitch Poller
     twitch_poller = TwitchPoller(config, store)
-    twitch_poller.start()
-    threads.append(twitch_poller)
+    twitch_poller.run()
 
     # Configure Stream Printer
     stream_printer = StreamPrinter(config, store)
@@ -39,8 +39,8 @@ def main():
     )
 
     # Block Main Thread
-    for thread in threads:
-        thread.join()
+    while(True):
+        sleep(1)
 
 
 main()

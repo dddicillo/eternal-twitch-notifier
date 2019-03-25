@@ -1,18 +1,16 @@
-from threading import Thread
+from rx import timer
 from twitch import TwitchClient
 from .model.stream import Stream
-from time import sleep
 from logging import getLogger
 
 logger = getLogger('twitch-poller')
 STREAMS_KEY = '/streams'
 
 
-class TwitchPoller(Thread):
+class TwitchPoller():
     '''Regularly updates the store with information retrieved from Twitch.'''
 
     def __init__(self, config, store):
-        Thread.__init__(self)
         self.client = TwitchClient(client_id=config.twitch_client_id)
         self.store = store
         self.polling_interval = config.polling_interval
@@ -59,7 +57,9 @@ class TwitchPoller(Thread):
         '''Polls the Twitch API periodically.'''
         logger.info('Starting Twitch poller...')
         logger.info('polling_interval: %d' % (self.polling_interval))
-        while True:
+
+        def poll(it):
             streams = self.get_streams()
             self.merge_streams(streams)
-            sleep(self.polling_interval)
+
+        timer(0, self.polling_interval).subscribe(on_next=poll)
