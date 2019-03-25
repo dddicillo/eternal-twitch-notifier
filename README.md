@@ -30,6 +30,7 @@ docker image build -t eternal_twitch .
 2. Run the container
 ```bash
 docker container run \
+  --interactive \
   --tty \
   --rm \
   --network host \

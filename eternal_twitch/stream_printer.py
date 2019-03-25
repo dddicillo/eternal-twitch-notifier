@@ -38,7 +38,14 @@ class StreamPrinter(Observer):
 
     def run(self):
         '''Subscribes the printer to changes to the store.'''
-        self.store.stream_changes.subscribe(self)
+        logger.info('Starting stream printer...')
+        self.disposer = self.store.stream_changes.subscribe(self)
+
+    def stop(self):
+        '''Stops printing changes to the store.'''
+        logger.info('Stopping stream printer...')
+        if self.disposer:
+            self.disposer.dispose()
 
     @staticmethod
     def create_table(streams):

@@ -62,4 +62,10 @@ class TwitchPoller():
             streams = self.get_streams()
             self.merge_streams(streams)
 
-        timer(0, self.polling_interval).subscribe(on_next=poll)
+        self.disposer = timer(0, self.polling_interval).subscribe(on_next=poll)
+
+    def stop(self):
+        '''Stops polling the Twitch API periodically.'''
+        logger.info('Stopping Twitch poller...')
+        if self.disposer:
+            self.disposer.dispose()

@@ -37,4 +37,11 @@ class StreamNotifier(Observer):
 
     def run(self):
         '''Subscribes the notifier to changes to the store.'''
-        self.updated_streams.subscribe(self)
+        logger.info('Starting stream notifier...')
+        self.disposer = self.updated_streams.subscribe(self)
+
+    def stop(self):
+        '''Stops notifying on changes to the store.'''
+        logger.info('Stopping stream notifier...')
+        if self.disposer:
+            self.disposer.dispose()

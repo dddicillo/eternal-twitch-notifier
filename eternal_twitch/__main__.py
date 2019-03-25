@@ -3,6 +3,7 @@ from .store import Store
 from .twitch_poller import TwitchPoller
 from .stream_printer import StreamPrinter
 from .stream_notifier import StreamNotifier
+from signal import signal, SIGINT, pause
 from time import sleep
 import logging
 
@@ -22,16 +23,27 @@ def main():
     # Initialize Store
     store = Store(config)
 
-    # Configure Twitch Poller
+    logging.info('Initializing...')
+    print('Initializing...')
     twitch_poller = TwitchPoller(config, store)
+    stream_printer = StreamPrinter(config, store)
+    stream_notifier = StreamNotifier(config, store)
+
+    # Signal Handler
+    def handle_signal(sig, frame):
+        stream_notifier.stop()
+        stream_printer.stop()
+        twitch_poller.stop()
+        exit(0)
+    signal(SIGINT, handle_signal)
+
+    # Run Twitch Poller
     twitch_poller.run()
 
-    # Configure Stream Printer
-    stream_printer = StreamPrinter(config, store)
+    # Run Stream Printer
     stream_printer.run()
 
-    # Configure Stream Notifier
-    stream_notifier = StreamNotifier(config, store)
+    # Run Stream Notifier
     stream_notifier.run()
 
     store.stream_changes.subscribe(
@@ -39,8 +51,7 @@ def main():
     )
 
     # Block Main Thread
-    while(True):
-        sleep(1)
+    pause()
 
 
 main()
