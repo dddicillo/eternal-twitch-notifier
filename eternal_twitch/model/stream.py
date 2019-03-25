@@ -26,7 +26,7 @@ class Stream:
     def from_twitch_data(data):
         '''Creates a stream object from dictionary returned by Twitch API'''
         return Stream(dict(
-            id=data['id'],
+            id=data['channel']['id'],
             streamer=data['channel']['name'],
             name=data['channel']['status'],
             viewers=data['viewers'],
