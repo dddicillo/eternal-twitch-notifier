@@ -45,7 +45,7 @@ class TwitchPoller(Thread):
 
         new_stream_ids = set(map(lambda stream: stream.id, new_streams))
         old_stream_ids = set(map(lambda stream: stream.id, old_streams))
-        ended_stream_ids = new_stream_ids.difference(old_stream_ids)
+        ended_stream_ids = old_stream_ids.difference(new_stream_ids)
 
         return list(filter(lambda stream: stream.id in ended_stream_ids, old_streams))
 
