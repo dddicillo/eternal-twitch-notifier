@@ -10,7 +10,6 @@ import logging
 
 def main():
     '''Main module function.'''
-    threads = []
     config = Config()
 
     # Configure Logging
@@ -51,7 +50,9 @@ def main():
     )
 
     # Block Main Thread
-    pause()
+    while(True):
+        pause()
+    logging.info('Stopping...')
 
 
 main()
