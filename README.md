@@ -16,7 +16,7 @@ You'll need a Twitch client ID and a Pushbullet API access token.
 
 You'll also need an `etcd` cluster in order to run the service. If you're not experienced with Etcd, I've got you covered. You can install the cluster using the provided `docker-compose.yml` file.
 ```bash
-docker-compose up -d
+docker-compose up --build --detach
 ```
 
 Once you have collected the necessary information, update `conf/eternal_twitch.cfg` accordingly.

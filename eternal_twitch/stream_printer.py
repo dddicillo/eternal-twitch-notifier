@@ -1,11 +1,12 @@
 from rx.core import Observer
+from rx.operators import debounce
 from os import system
 from texttable import Texttable
 from re import sub, I
 from colorama import Fore
 from logging import getLogger
 
-logger = getLogger('stream-printer')
+logger = getLogger('stream_printer')
 
 
 class StreamPrinter(Observer):
@@ -39,12 +40,14 @@ class StreamPrinter(Observer):
     def run(self):
         '''Subscribes the printer to changes to the store.'''
         logger.info('Starting stream printer...')
-        self.disposer = self.store.stream_changes.subscribe(self)
+        self.disposer = self.store.stream_changes.pipe(
+            debounce(1)
+        ).subscribe(self)
 
     def stop(self):
         '''Stops printing changes to the store.'''
-        logger.info('Stopping stream printer...')
-        if self.disposer:
+        if hasattr(self, 'disposer'):
+            logger.info('Stopping stream printer...')
             self.disposer.dispose()
 
     @staticmethod

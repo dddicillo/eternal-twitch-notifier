@@ -4,7 +4,7 @@ from pushbullet import PushBullet
 from re import search, I
 from logging import getLogger
 
-logger = getLogger('stream-notifier')
+logger = getLogger('stream_notifier')
 
 
 class StreamNotifier(Observer):
@@ -42,6 +42,6 @@ class StreamNotifier(Observer):
 
     def stop(self):
         '''Stops notifying on changes to the store.'''
-        logger.info('Stopping stream notifier...')
-        if self.disposer:
+        if hasattr(self, 'disposer'):
+            logger.info('Stopping stream notifier...')
             self.disposer.dispose()

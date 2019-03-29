@@ -3,6 +3,17 @@ version: "3"
 
 services:
 
+  eternal_twitch:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: eternal_twitch:latest
+    ports:
+      - "5000:5000"
+    environment:
+      - "ETCD_HOSTS=etcd1:2379,etcd2:2379,etcd3:2379"
+      - "LOG_LEVEL=DEBUG"
+
   etcd1: 
     image: quay.io/coreos/etcd:v3.3.12
     ports:
@@ -14,7 +25,7 @@ services:
       - "--name=node1"
       - "--initial-advertise-peer-urls=http://etcd1:2380"
       - "--listen-peer-urls=http://0.0.0.0:2380"
-      - "--advertise-client-urls=http://${NODE1:-localhost}:12379"
+      - "--advertise-client-urls=http://${NODE1:-localhost}:12379,http://etcd1:2379"
       - "--listen-client-urls=http://0.0.0.0:2379"
       - "--initial-cluster=node1=http://etcd1:2380,node2=http://etcd2:2380,node3=http://etcd3:2380"
       - "--initial-cluster-state=new"
@@ -31,7 +42,7 @@ services:
       - "--name=node2"
       - "--initial-advertise-peer-urls=http://etcd2:2380"
       - "--listen-peer-urls=http://0.0.0.0:2380"
-      - "--advertise-client-urls=http://${NODE2-localhost}:22379"
+      - "--advertise-client-urls=http://${NODE2-localhost}:22379,http://etcd2:2379"
       - "--listen-client-urls=http://0.0.0.0:2379"
       - "--initial-cluster=node1=http://etcd1:2380,node2=http://etcd2:2380,node3=http://etcd3:2380"
       - "--initial-cluster-state=new"
@@ -48,7 +59,7 @@ services:
       - "--name=node3"
       - "--initial-advertise-peer-urls=http://etcd3:2380"
       - "--listen-peer-urls=http://0.0.0.0:2380"
-      - "--advertise-client-urls=http://${NODE3:-localhost}:32379"
+      - "--advertise-client-urls=http://${NODE3:-localhost}:32379,http://etcd3:2379"
       - "--listen-client-urls=http://0.0.0.0:2379"
       - "--initial-cluster=node1=http://etcd1:2380,node2=http://etcd2:2380,node3=http://etcd3:2380"
       - "--initial-cluster-state=new"

@@ -2,6 +2,9 @@ certifi==2019.3.9
 chardet==3.0.4
 colorama==0.4.1
 dnspython==1.16.0
+eventlet==0.24.1
+Flask==1.0.2
+Flask-SocketIO==3.3.2
 idna==2.8
 pushbullet.py==0.11.0
 python-etcd==0.4.5

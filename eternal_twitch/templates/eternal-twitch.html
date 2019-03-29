@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Eternal Twitch Streams</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+
+<body>
+  <table class="highlight">
+    <thead>
+      <th>Streamer</th>
+      <th>Name</th>
+      <th>Viewers</th>
+    </thead>
+
+    <tbody id="streams-data">
+    </tbody>
+  </table>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.slim.js"></script>
+  <script type="text/javascript">
+    (function() {
+      console.log('Connecting to websocket...');
+      const socket = io('http://' + document.domain + ':' + location.port);
+
+      socket.on('connect', function () {
+        console.log('Connected!');
+        socket.emit('connected');
+      });
+
+      socket.on('streams', function (streams) {
+        document.getElementById('streams-data').innerHTML = generateTable(streams);
+      });
+      
+      const generateTable = function(streams) {
+        return streams.map(stream => {
+          return `<tr onclick="window.location='${stream.url}'">
+            <td>${stream.streamer}</td>
+            <td>${stream.name}</td>
+            <td><span class="new badge" data-badge-caption="">${stream.viewers}</span></td>
+          </tr>`;
+        }).join('\n');
+      };
+    })();
+  </script>
+</body>
+
+</html>

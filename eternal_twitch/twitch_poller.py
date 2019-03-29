@@ -3,7 +3,7 @@ from twitch import TwitchClient
 from .model.stream import Stream
 from logging import getLogger
 
-logger = getLogger('twitch-poller')
+logger = getLogger('twitch_poller')
 STREAMS_KEY = '/streams'
 
 
@@ -28,11 +28,16 @@ class TwitchPoller():
     def merge_streams(self, new_streams):
         '''Adds new streams to store. Updates existing streams with new data. Removes completed streams.'''
         ended_streams = self.get_ended_streams(new_streams)
+        if len(ended_streams) > 0:
+            logger.debug('Removing %d ended streams...' % (len(ended_streams)))
         for stream in ended_streams:
             if self.should_delete(stream):
                 self.store.delete_stream(stream)
                 del self.deletion_count[stream.id]
 
+        if len(new_streams) > 0:
+            logger.debug('Adding or updating %d streams...' %
+                         (len(new_streams)))
         for stream in new_streams:
             self.store.write_or_update_stream(stream)
             self.deletion_count[stream.id] = 0
@@ -66,6 +71,6 @@ class TwitchPoller():
 
     def stop(self):
         '''Stops polling the Twitch API periodically.'''
-        logger.info('Stopping Twitch poller...')
-        if self.disposer:
+        if hasattr(self, 'disposer'):
+            logger.info('Stopping Twitch poller...')
             self.disposer.dispose()
